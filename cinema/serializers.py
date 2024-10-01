@@ -21,11 +21,7 @@ class CinemaHallSerializer(serializers.ModelSerializer):
         fields = ["name", "rows", "seats_in_row"]
 
 
-class MovieSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    title = serializers.CharField(max_length=255)
-    description = serializers.CharField()
-    duration = serializers.IntegerField()
+class MovieSerializer(serializers.ModelSerializer):
     actors = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Actor.objects.all()
@@ -34,6 +30,17 @@ class MovieSerializer(serializers.Serializer):
         many=True,
         queryset=Genre.objects.all()
     )
+
+    class Meta:
+        model = Movie
+        fields = [
+            "id",
+            "title",
+            "description",
+            "duration",
+            "actors",
+            "genres"
+        ]
 
     def create(self, validated_data):
         actors = validated_data.pop("actors")
